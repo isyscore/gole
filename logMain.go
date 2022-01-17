@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/simonalong/gole/config"
-	"github.com/simonalong/gole/log"
+	"github.com/isyscore/gole/config"
+	"github.com/isyscore/gole/log"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )

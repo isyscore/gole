@@ -1,4 +1,4 @@
-module github.com/simonalong/gole
+module github.com/isyscore/gole
 
 go 1.17
 

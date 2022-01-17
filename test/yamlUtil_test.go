@@ -2,8 +2,8 @@ package test
 
 import (
 	"fmt"
+	"github.com/isyscore/gole/yaml"
 	"github.com/magiconair/properties"
-	"github.com/simonalong/gole/yaml"
 	"io/ioutil"
 	"log"
 	"strings"

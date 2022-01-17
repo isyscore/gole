@@ -3,8 +3,8 @@ package config
 import (
 	"flag"
 	"fmt"
-	"github.com/simonalong/gole/util"
-	"github.com/simonalong/gole/yaml"
+	"github.com/isyscore/gole/util"
+	"github.com/isyscore/gole/yaml"
 	"io/ioutil"
 	"os"
 	"path"

@@ -24,7 +24,6 @@ func LoadConfig() {
 // LoadConfigFromRelativePath 加载相对文件路径，相对路径是相对系统启动的位置部分
 func LoadConfigFromRelativePath(resourceAbsPath string) {
 	dir, _ := os.Getwd()
-	fmt.Println(dir)
 	pkg := strings.Replace(dir, "\\", "/", -1)
 	LoadConfigWithAbsPath(path.Join(pkg, "", resourceAbsPath))
 }
@@ -38,7 +37,6 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 		resourceAbsPath += "/"
 	}
 
-	fmt.Println("resourceAbsPath = " + resourceAbsPath)
 	files, err := ioutil.ReadDir(resourceAbsPath)
 	if err != nil {
 		fmt.Printf("read fail, resource: %v, err %v", resourceAbsPath, err.Error())
@@ -52,7 +50,6 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 		if file.IsDir() {
 			continue
 		}
-		fmt.Println("profile = " + profile)
 		// 默认配置
 		if profile == "" {
 			fileName := file.Name()
@@ -60,25 +57,21 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 			case "application.yaml":
 				{
 					LoadYamlFile(resourceAbsPath + "application.yaml")
-					fmt.Println("application.yaml finish")
 					return
 				}
 			case "application.yml":
 				{
 					LoadYamlFile(resourceAbsPath + "application.yml")
-					fmt.Println("application.yml finish")
 					return
 				}
 			case "application.properties":
 				{
 					LoadYamlFile(resourceAbsPath + "application.properties")
-					fmt.Println("application.properties finish")
 					return
 				}
 			case "application.json":
 				{
 					LoadYamlFile(resourceAbsPath + "application.json")
-					fmt.Println("application.json finish")
 					return
 				}
 			}

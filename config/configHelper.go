@@ -37,6 +37,8 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 	if !strings.HasSuffix(resourceAbsPath, "/") {
 		resourceAbsPath += "/"
 	}
+
+	fmt.Println("resourceAbsPath = " + resourceAbsPath)
 	files, err := ioutil.ReadDir(resourceAbsPath)
 	if err != nil {
 		fmt.Printf("read fail, resource: %v, err %v", resourceAbsPath, err.Error())

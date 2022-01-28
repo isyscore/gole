@@ -52,7 +52,7 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 		if file.IsDir() {
 			continue
 		}
-
+		fmt.Println("profile = " + profile)
 		// 默认配置
 		if profile == "" {
 			fileName := file.Name()
@@ -60,21 +60,25 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 			case "application.yaml":
 				{
 					LoadYamlFile(resourceAbsPath + "application.yaml")
+					fmt.Println("application.yaml finish")
 					return
 				}
 			case "application.yml":
 				{
 					LoadYamlFile(resourceAbsPath + "application.yml")
+					fmt.Println("application.yml finish")
 					return
 				}
 			case "application.properties":
 				{
 					LoadYamlFile(resourceAbsPath + "application.properties")
+					fmt.Println("application.properties finish")
 					return
 				}
 			case "application.json":
 				{
 					LoadYamlFile(resourceAbsPath + "application.json")
+					fmt.Println("application.json finish")
 					return
 				}
 			}

@@ -24,6 +24,7 @@ func LoadConfig() {
 // LoadConfigFromRelativePath 加载相对文件路径，相对路径是相对系统启动的位置部分
 func LoadConfigFromRelativePath(resourceAbsPath string) {
 	dir, _ := os.Getwd()
+	fmt.Println(dir)
 	pkg := strings.Replace(dir, "\\", "/", -1)
 	LoadConfigWithAbsPath(path.Join(pkg, "", resourceAbsPath))
 }

@@ -876,12 +876,14 @@ func TestObjectToData14(t *testing.T) {
 func TestObjectToData15(t *testing.T) {
 	inner := ValueInnerEntity1{
 		Name: "zhou",
-		Age:  12,
 	}
 
-	orginal := ValueInnerEntityPtr{Ptr: &inner}
-	newData := ValueInnerEntityPtr{}
+	expect := ValueInnerEntity1{}
 
-	util.DataToObject(orginal, &newData)
-	fmt.Println(newData.Ptr.Name)
+	map1 := map[string]interface{}{}
+	map1["name"] = "zhou"
+
+	_ = util.DataToObject(map1, &expect)
+
+	Equal(t, inner.Name, expect.Name)
 }

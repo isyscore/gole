@@ -117,22 +117,22 @@ func AppendConfigFromRelativePath(fileName string) {
 	switch extend {
 	case "yaml":
 		{
-			LoadYamlFile(fileName)
+			AppendYamlFile(fileName)
 			return
 		}
 	case "yml":
 		{
-			LoadYamlFile(fileName)
+			AppendYamlFile(fileName)
 			return
 		}
 	case "properties":
 		{
-			LoadPropertyFile(fileName)
+			AppendPropertyFile(fileName)
 			return
 		}
 	case "json":
 		{
-			LoadJsonFile(fileName)
+			AppendJsonFile(fileName)
 			return
 		}
 	}
@@ -202,6 +202,28 @@ func LoadYamlFile(filePath string) {
 	appProperty.ValueDeepMap = yamlMap
 }
 
+func AppendYamlFile(filePath string) {
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		fmt.Println("fail to read file:", err)
+	}
+
+	if appProperty == nil {
+		appProperty = &ApplicationProperty{}
+	}
+
+	property, err := yaml.YamlToProperties(string(content))
+	valueMap, _ := yaml.PropertiesToMap(property)
+	for k, v := range valueMap {
+		appProperty.ValueMap[k] = v
+	}
+
+	yamlMap, err := yaml.YamlToMap(string(content))
+	for k, v := range yamlMap {
+		appProperty.ValueDeepMap[k] = v
+	}
+}
+
 func LoadPropertyFile(filePath string) {
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -218,6 +240,28 @@ func LoadPropertyFile(filePath string) {
 	yamlStr, _ := yaml.PropertiesToYaml(string(content))
 	yamlMap, _ := yaml.YamlToMap(yamlStr)
 	appProperty.ValueDeepMap = yamlMap
+}
+
+func AppendPropertyFile(filePath string) {
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		fmt.Println("fail to read file:", err)
+	}
+
+	if appProperty == nil {
+		appProperty = &ApplicationProperty{}
+	}
+
+	valueMap, _ := yaml.PropertiesToMap(string(content))
+	for k, v := range valueMap {
+		appProperty.ValueMap[k] = v
+	}
+
+	yamlStr, _ := yaml.PropertiesToYaml(string(content))
+	yamlMap, _ := yaml.YamlToMap(yamlStr)
+	for k, v := range yamlMap {
+		appProperty.ValueDeepMap[k] = v
+	}
 }
 
 func LoadJsonFile(filePath string) {
@@ -237,6 +281,30 @@ func LoadJsonFile(filePath string) {
 
 	yamlMap, _ := yaml.YamlToMap(yamlStr)
 	appProperty.ValueDeepMap = yamlMap
+}
+
+func AppendJsonFile(filePath string) {
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		fmt.Println("fail to read file:", err)
+	}
+
+	if appProperty == nil {
+		appProperty = &ApplicationProperty{}
+	}
+
+	yamlStr, err := yaml.JsonToYaml(string(content))
+	property, err := yaml.YamlToProperties(yamlStr)
+	valueMap, _ := yaml.PropertiesToMap(property)
+	for k, v := range valueMap {
+		appProperty.ValueMap[k] = v
+	}
+
+	yamlMap, _ := yaml.YamlToMap(yamlStr)
+	appProperty.ValueDeepMap = yamlMap
+	for k, v := range yamlMap {
+		appProperty.ValueDeepMap[k] = v
+	}
 }
 
 func SetValue(key string, value interface{}) {

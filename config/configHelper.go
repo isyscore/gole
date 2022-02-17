@@ -112,9 +112,6 @@ func AppendConfigFromRelativePath(fileName string) {
 	dir, _ := os.Getwd()
 	pkg := strings.Replace(dir, "\\", "/", -1)
 	fileName = path.Join(pkg, "", fileName)
-	if !strings.HasSuffix(fileName, "/") {
-		fileName += "/"
-	}
 	extend := getFileExtension(fileName)
 	extend = strings.ToLower(extend)
 	switch extend {

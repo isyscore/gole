@@ -108,6 +108,66 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 	}
 }
 
+func AppendConfigFromRelativePath(fileName string) {
+	dir, _ := os.Getwd()
+	pkg := strings.Replace(dir, "\\", "/", -1)
+	fileName = path.Join(pkg, "", fileName)
+	if !strings.HasSuffix(fileName, "/") {
+		fileName += "/"
+	}
+	extend := getFileExtension(fileName)
+	extend = strings.ToLower(extend)
+	switch extend {
+	case "yaml":
+		{
+			LoadYamlFile(fileName + fileName)
+			return
+		}
+	case "yml":
+		{
+			LoadYamlFile(fileName + fileName)
+			return
+		}
+	case "properties":
+		{
+			LoadPropertyFile(fileName + fileName)
+			return
+		}
+	case "json":
+		{
+			LoadJsonFile(fileName + fileName)
+			return
+		}
+	}
+}
+
+func AppendConfigWithAbsPath(fileName string) {
+	extend := getFileExtension(fileName)
+	extend = strings.ToLower(extend)
+	switch extend {
+	case "yaml":
+		{
+			LoadYamlFile(fileName + fileName)
+			return
+		}
+	case "yml":
+		{
+			LoadYamlFile(fileName + fileName)
+			return
+		}
+	case "properties":
+		{
+			LoadPropertyFile(fileName + fileName)
+			return
+		}
+	case "json":
+		{
+			LoadJsonFile(fileName + fileName)
+			return
+		}
+	}
+}
+
 func getProfileFromFileName(fileName string) string {
 	if strings.HasPrefix(fileName, "application-") {
 		words := strings.SplitN(fileName, ".", 2)

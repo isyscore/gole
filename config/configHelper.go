@@ -117,22 +117,22 @@ func AppendConfigFromRelativePath(fileName string) {
 	switch extend {
 	case "yaml":
 		{
-			LoadYamlFile(fileName + fileName)
+			LoadYamlFile(fileName)
 			return
 		}
 	case "yml":
 		{
-			LoadYamlFile(fileName + fileName)
+			LoadYamlFile(fileName)
 			return
 		}
 	case "properties":
 		{
-			LoadPropertyFile(fileName + fileName)
+			LoadPropertyFile(fileName)
 			return
 		}
 	case "json":
 		{
-			LoadJsonFile(fileName + fileName)
+			LoadJsonFile(fileName)
 			return
 		}
 	}

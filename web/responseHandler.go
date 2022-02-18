@@ -3,7 +3,6 @@ package web
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/isyscore/gole/config"
 	http2 "github.com/isyscore/gole/http"
@@ -33,6 +32,16 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		// 开始时间
 		startTime := time.Now()
 
+		bodyMap := map[string]interface{}{}
+
+		data, err := ioutil.ReadAll(c.Request.Body)
+		if err != nil {
+			logger.Errorf("read request body failed,err = %s.", err)
+			return
+		}
+		_ = util.DataToObject(string(data), &bodyMap)
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
+
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
 
@@ -47,6 +56,7 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 			Uri:        c.Request.RequestURI,
 			Ip:         c.ClientIP(),
 			Parameters: c.Params,
+			Body:       bodyMap,
 		}
 
 		if config.GetValueBool("gole.show.head") {
@@ -64,14 +74,6 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 					return
 				}
 			}
-			bodyMap := map[string]interface{}{}
-			_ = util.DataToObject(c.Request.Body, &bodyMap)
-
-			data, err := ioutil.ReadAll(c.Request.Body)
-			if err != nil {
-				return
-			}
-			fmt.Println(string(data))
 			logger.WithField("result", util.ObjectToJson(message)).Error("请求异常")
 		} else {
 			var response http2.StandardResponse
@@ -84,12 +86,6 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 				}
 				if response.Code != 0 && response.Code != "0" && response.Code != 200 && response.Code != "200" && response.Code != "success" {
 					message.Response = response
-
-					data, err := ioutil.ReadAll(c.Request.Body)
-					if err != nil {
-						return
-					}
-					fmt.Println(string(data))
 					logger.WithField("result", util.ObjectToJson(message)).Error("请求异常")
 				}
 			}

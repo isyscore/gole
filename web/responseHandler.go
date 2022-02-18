@@ -84,6 +84,12 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 				}
 				if response.Code != 0 && response.Code != "0" && response.Code != 200 && response.Code != "200" && response.Code != "success" {
 					message.Response = response
+
+					data, err := ioutil.ReadAll(c.Request.Body)
+					if err != nil {
+						return
+					}
+					fmt.Println(string(data))
 					logger.WithField("result", util.ObjectToJson(message)).Error("请求异常")
 				}
 			}

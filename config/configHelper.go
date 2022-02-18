@@ -108,6 +108,7 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 	}
 }
 
+// AppendConfigFromRelativePath 追加配置：相对路径的配置文件
 func AppendConfigFromRelativePath(fileName string) {
 	dir, _ := os.Getwd()
 	pkg := strings.Replace(dir, "\\", "/", -1)
@@ -138,28 +139,29 @@ func AppendConfigFromRelativePath(fileName string) {
 	}
 }
 
+// AppendConfigWithAbsPath 追加配置：绝对路径的配置文件
 func AppendConfigWithAbsPath(fileName string) {
 	extend := getFileExtension(fileName)
 	extend = strings.ToLower(extend)
 	switch extend {
 	case "yaml":
 		{
-			LoadYamlFile(fileName + fileName)
+			AppendYamlFile(fileName + fileName)
 			return
 		}
 	case "yml":
 		{
-			LoadYamlFile(fileName + fileName)
+			AppendYamlFile(fileName + fileName)
 			return
 		}
 	case "properties":
 		{
-			LoadPropertyFile(fileName + fileName)
+			AppendPropertyFile(fileName + fileName)
 			return
 		}
 	case "json":
 		{
-			LoadJsonFile(fileName + fileName)
+			AppendJsonFile(fileName + fileName)
 			return
 		}
 	}

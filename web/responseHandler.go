@@ -3,6 +3,7 @@ package web
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/isyscore/gole/config"
 	http2 "github.com/isyscore/gole/http"
@@ -43,6 +44,7 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		bodyMap := map[string]interface{}{}
 		_ = util.DataToObject(c.Request.Body, &bodyMap)
 
+		fmt.Println(bodyMap)
 		request := Request{
 			Method:     c.Request.Method,
 			Uri:        c.Request.RequestURI,

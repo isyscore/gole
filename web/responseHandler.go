@@ -42,13 +42,11 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		// 状态码
 		statusCode := c.Writer.Status()
 
-		fmt.Println(bodyMap)
 		request := Request{
 			Method:     c.Request.Method,
 			Uri:        c.Request.RequestURI,
 			Ip:         c.ClientIP(),
 			Parameters: c.Params,
-			Body:       bodyMap,
 		}
 
 		if config.GetValueBool("gole.show.head") {

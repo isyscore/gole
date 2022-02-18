@@ -9,6 +9,7 @@ import (
 	http2 "github.com/isyscore/gole/http"
 	"github.com/isyscore/gole/log"
 	"github.com/isyscore/gole/util"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -41,9 +42,6 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		// 状态码
 		statusCode := c.Writer.Status()
 
-		bodyMap := map[string]interface{}{}
-		_ = util.DataToObject(c.Request.Body, &bodyMap)
-
 		fmt.Println(bodyMap)
 		request := Request{
 			Method:     c.Request.Method,
@@ -68,6 +66,14 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 					return
 				}
 			}
+			bodyMap := map[string]interface{}{}
+			_ = util.DataToObject(c.Request.Body, &bodyMap)
+
+			data, err := ioutil.ReadAll(c.Request.Body)
+			if err != nil {
+				return
+			}
+			fmt.Println(string(data))
 			logger.WithField("result", util.ObjectToJson(message)).Error("请求异常")
 		} else {
 			var response http2.StandardResponse

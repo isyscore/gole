@@ -179,7 +179,7 @@ func setKeyValue(c *gin.Context) {
 }
 
 func getKeyValues(c *gin.Context) {
-	Success(c, config.GetProperty().ValueDeepMap)
+	Success(c, util.ObjectToJson(config.GetProperty().ValueDeepMap))
 }
 
 func getHostAndPort() string {

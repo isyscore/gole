@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/isyscore/gole/config"
 	"github.com/isyscore/gole/util"
+	"github.com/isyscore/gole/yaml"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
@@ -179,7 +180,15 @@ func setKeyValue(c *gin.Context) {
 }
 
 func getKeyValues(c *gin.Context) {
-	Success(c, util.ObjectToJson(config.GetProperty().ValueDeepMap))
+	//Success(c, util.ObjectToJson(config.GetProperty().ValueDeepMap))
+	//if nil != appProperty {
+	//	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(isc.ObjectToJson(appProperty.ValueMap)))
+	//} else {
+	//	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("{}"))
+	//}
+
+	data, _ := yaml.ObjectToYaml(config.GetProperty().ValueDeepMap)
+	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
 }
 
 func getHostAndPort() string {

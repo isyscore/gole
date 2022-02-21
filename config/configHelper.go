@@ -167,6 +167,10 @@ func AppendConfigWithAbsPath(fileName string) {
 	}
 }
 
+func GetProperty() *ApplicationProperty {
+	return appProperty
+}
+
 func getProfileFromFileName(fileName string) string {
 	if strings.HasPrefix(fileName, "application-") {
 		words := strings.SplitN(fileName, ".", 2)

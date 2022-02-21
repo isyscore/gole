@@ -107,6 +107,7 @@ func LogRouters(r *gin.Engine) {
 		appRouter.POST("logger/root/level/:level", setLoggerRootLevel)
 		// 修改环境变量
 		appRouter.POST("env", setKeyValue)
+		appRouter.GET("envs", getKeyValues)
 	}
 }
 
@@ -175,6 +176,10 @@ func setKeyValue(c *gin.Context) {
 	}
 
 	config.SetValue(envProperty.Key, envProperty.Value)
+}
+
+func getKeyValues(c *gin.Context) {
+	Success(c, config.GetProperty().ValueDeepMap)
 }
 
 func getHostAndPort() string {

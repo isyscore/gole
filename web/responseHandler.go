@@ -64,8 +64,9 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		}
 
 		message := ErrorMessage{
-			Request: request,
-			Cost:    time.Now().Sub(startTime).String(),
+			Request:    request,
+			StatusCode: statusCode,
+			Cost:       time.Now().Sub(startTime).String(),
 		}
 
 		if statusCode != 200 {
@@ -103,9 +104,10 @@ type Request struct {
 }
 
 type ErrorMessage struct {
-	Request  Request
-	Response http2.StandardResponse
-	Cost     string
+	Request    Request
+	Response   http2.StandardResponse
+	Cost       string
+	StatusCode int
 }
 
 func Success(ctx *gin.Context, object interface{}) {

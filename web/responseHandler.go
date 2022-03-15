@@ -32,14 +32,14 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		// 开始时间
 		startTime := time.Now()
 
-		bodyMap := map[string]interface{}{}
+		//bodyMap := map[string]interface{}{}
 
 		data, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
 			logger.Errorf("read request body failed,err = %s.", err)
 			return
 		}
-		_ = util.DataToObject(string(data), &bodyMap)
+		//_ = util.DataToObject(string(data), &bodyMap)
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
 
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
@@ -56,7 +56,7 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 			Uri:        c.Request.RequestURI,
 			Ip:         c.ClientIP(),
 			Parameters: c.Params,
-			Body:       bodyMap,
+			//Body:       bodyMap,
 		}
 
 		if config.GetValueBool("gole.show.head") {

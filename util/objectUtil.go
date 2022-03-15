@@ -416,6 +416,11 @@ func DataToObject(data interface{}, targetPtrObj interface{}) error {
 		fmt.Printf("data is nil")
 		return nil
 	}
+
+	if data == "" {
+		fmt.Printf("data is empty ")
+		return nil
+	}
 	targetType := reflect.TypeOf(targetPtrObj)
 	if targetType.Kind() != reflect.Ptr {
 		fmt.Printf("targetPtrObj type is not ptr")

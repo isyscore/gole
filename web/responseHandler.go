@@ -24,7 +24,7 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
-// 日志记录到文件
+// ResponseHandler 日志记录到文件
 func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 	//实例化
 	logger := log.GetLogger("isc-config-service")
@@ -53,11 +53,13 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		bodyStr := string(data)
 		if "" != bodyStr {
 			if strings.HasPrefix(bodyStr, "{") && strings.HasSuffix(bodyStr, "}") {
-				var bodys []interface{}
+				bodys := map[string]interface{}{}
 				_ = util.StrToObject(bodyStr, &bodys)
 				body = bodys
 			} else if strings.HasPrefix(bodyStr, "[") && strings.HasSuffix(bodyStr, "]") {
-				_ = util.StrToObject(bodyStr, &body)
+				var bodys []interface{}
+				_ = util.StrToObject(bodyStr, &bodys)
+				body = bodys
 			}
 		}
 

@@ -10,6 +10,7 @@ import (
 	"github.com/isyscore/gole/util"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -32,14 +33,11 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		// 开始时间
 		startTime := time.Now()
 
-		//bodyMap := map[string]interface{}{}
-
 		data, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
 			logger.Errorf("read request body failed,err = %s.", err)
 			return
 		}
-		//_ = util.DataToObject(string(data), &bodyMap)
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
 
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
@@ -51,12 +49,24 @@ func ResponseHandler(exceptCode ...int) gin.HandlerFunc {
 		// 状态码
 		statusCode := c.Writer.Status()
 
+		var body interface{}
+		bodyStr := string(data)
+		if "" != bodyStr {
+			if strings.HasPrefix(bodyStr, "{") && strings.HasSuffix(bodyStr, "}") {
+				var bodys []interface{}
+				_ = util.StrToObject(bodyStr, &bodys)
+				body = bodys
+			} else if strings.HasPrefix(bodyStr, "[") && strings.HasSuffix(bodyStr, "]") {
+				_ = util.StrToObject(bodyStr, &body)
+			}
+		}
+
 		request := Request{
 			Method:     c.Request.Method,
 			Uri:        c.Request.RequestURI,
 			Ip:         c.ClientIP(),
 			Parameters: c.Params,
-			//Body:       bodyMap,
+			Body:       body,
 		}
 
 		if config.GetValueBool("gole.show.head") {
@@ -100,7 +110,7 @@ type Request struct {
 	Ip         string
 	Headers    http.Header
 	Parameters gin.Params
-	Body       map[string]interface{}
+	Body       interface{}
 }
 
 type ErrorMessage struct {

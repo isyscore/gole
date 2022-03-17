@@ -523,7 +523,7 @@ func TestStrToObject6(t *testing.T) {
 
 func TestStrToObject7(t *testing.T) {
 	var targetObj []ValueInnerEntity1
-	_ = util.StrToObject("[{\"Age\": 12},{\"Age\":14}]", &targetObj)
+	_ = util.DataToObject("[{\"Age\": 12},{\"Age\":14}]", &targetObj)
 	Equal(t, util.ObjectToJson(targetObj), "[{\"age\":12,\"name\":\"\"},{\"age\":14,\"name\":\"\"}]")
 }
 

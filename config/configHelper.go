@@ -309,6 +309,7 @@ func SetValue(key string, value interface{}) {
 		}
 		appProperty.ValueMap[key] = value
 	}
+
 	doPutValue(key, value)
 }
 

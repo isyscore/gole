@@ -299,9 +299,44 @@ func AppendJsonFile(filePath string) {
 func SetValue(key string, value interface{}) {
 	if appProperty == nil {
 		appProperty = &ApplicationProperty{}
-		appProperty.ValueMap = map[string]interface{}{}
+		appProperty.ValueMap = make(map[string]interface{})
 	}
-	appProperty.ValueMap[key] = value
+	if oldValue, exist := appProperty.ValueMap[key]; exist {
+		if !util.IsBaseType(reflect.TypeOf(oldValue)) {
+			if reflect.TypeOf(oldValue) != reflect.TypeOf(value) {
+				return
+			}
+		}
+		appProperty.ValueMap[key] = value
+	}
+	doPutValue(key, value)
+}
+
+func doPutValue(key string, value interface{}) {
+	if strings.Contains(key, ".") {
+		oldValue := GetValue(key)
+		if nil == oldValue {
+			return
+		}
+		if !util.IsBaseType(reflect.TypeOf(oldValue)) {
+			if reflect.TypeOf(oldValue).Kind() != reflect.TypeOf(value).Kind() {
+				return
+			}
+		}
+
+		lastIndex := strings.LastIndex(key, ".")
+		startKey := key[:lastIndex]
+		endKey := key[lastIndex+1:]
+
+		data := GetValue(startKey)
+		startValue := util.ToMap(data)
+		if nil != startValue {
+			startValue[endKey] = value
+		}
+
+		doPutValue(startKey, startValue)
+	}
+	appProperty.ValueDeepMap[key] = value
 }
 
 func GetValueString(key string) string {

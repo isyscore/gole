@@ -234,6 +234,9 @@ func getFileExtension(fileName string) string {
 }
 
 func LoadYamlFile(filePath string) {
+	if !util.FileExists(filePath) {
+		return
+	}
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("fail to read file:", err)
@@ -258,6 +261,9 @@ func LoadYamlFile(filePath string) {
 }
 
 func AppendYamlFile(filePath string) {
+	if !util.FileExists(filePath) {
+		return
+	}
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("fail to read file:", err)
@@ -281,6 +287,9 @@ func AppendYamlFile(filePath string) {
 }
 
 func LoadPropertyFile(filePath string) {
+	if !util.FileExists(filePath) {
+		return
+	}
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("fail to read file:", err)
@@ -305,6 +314,9 @@ func LoadPropertyFile(filePath string) {
 }
 
 func AppendPropertyFile(filePath string) {
+	if !util.FileExists(filePath) {
+		return
+	}
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("fail to read file:", err)
@@ -327,6 +339,9 @@ func AppendPropertyFile(filePath string) {
 }
 
 func LoadJsonFile(filePath string) {
+	if !util.FileExists(filePath) {
+		return
+	}
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("fail to read file:", err)
@@ -352,6 +367,9 @@ func LoadJsonFile(filePath string) {
 }
 
 func AppendJsonFile(filePath string) {
+	if !util.FileExists(filePath) {
+		return
+	}
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("fail to read file:", err)

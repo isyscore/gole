@@ -15,6 +15,7 @@ import (
 
 var appProperty *ApplicationProperty
 var configExist = false
+var configProfile = ""
 var loadLock sync.Mutex
 var configLoaded = false
 
@@ -199,9 +200,13 @@ func LoadFile(filePath string) {
 // 临时写死
 // 优先级：环境变量 > 本地配置
 func getActiveProfile() string {
+	if configProfile != "" {
+		return configProfile
+	}
 	var profile string
 	flag.StringVar(&profile, "gole.profile", "", "环境变量")
 	flag.Parse()
+	configProfile = profile
 	return profile
 }
 

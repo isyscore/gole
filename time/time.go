@@ -1,6 +1,9 @@
 package time
 
-import "time"
+import (
+	"github.com/isyscore/gole/util"
+	"time"
+)
 
 var (
 	Year  = "2006"
@@ -54,4 +57,8 @@ func ParseTimeYmsHmsLoc(timeStr string, loc *time.Location) (time.Time, error) {
 
 func ParseTimeYmsHmsSLoc(timeStr string, loc *time.Location) (time.Time, error) {
 	return time.ParseInLocation(Year+"-"+Month+"-"+Day+" "+Hour+":"+Minute+":"+Second+".000", timeStr, loc)
+}
+
+func NumToTimeDuration(num int, duration time.Duration) time.Duration {
+	return time.Duration(util.ToInt64(num) * duration.Nanoseconds())
 }

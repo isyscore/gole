@@ -1,7 +1,6 @@
 package config
 
 import (
-	"flag"
 	"fmt"
 	"github.com/isyscore/gole/util"
 	"github.com/isyscore/gole/yaml"
@@ -46,9 +45,6 @@ func LoadConfigFromRelativePath(resourceAbsPath string) {
 // 支持命令行：--app.profile xxx
 func LoadConfigWithAbsPath(resourceAbsPath string) {
 	doLoadConfigFromAbsPath(resourceAbsPath)
-
-	// 读取cm文件
-	AppendConfigFromRelativePath("./config/application-default.yml")
 
 	// 加载ApiModule
 	ApiModule = GetValueString("api-module")
@@ -208,17 +204,34 @@ func AppendFile(filePath string) {
 	}
 }
 
+// ClearConfig 慎用！！！！！：该方法会将所有配置清理掉
+func ClearConfig() {
+	appProperty.ValueMap = make(map[string]interface{})
+	appProperty.ValueDeepMap = make(map[string]interface{})
+}
+
 // 临时写死
 // 优先级：环境变量 > 本地配置
 func getActiveProfile() string {
-	if configProfile != "" {
-		return configProfile
+	//if configProfile != "" {
+	//	return configProfile
+	//}
+	//var profile string
+	//flag.StringVar(&profile, "gole.profile", "", "环境变量")
+	//flag.Parse()
+	//configProfile = profile
+	//return profile
+
+	profile := os.Getenv("gole.profile")
+	if profile != "" {
+		return profile
 	}
-	var profile string
-	flag.StringVar(&profile, "gole.profile", "", "环境变量")
-	flag.Parse()
-	configProfile = profile
-	return profile
+
+	//profile = GetValueString("base.profiles.active")
+	//if profile != "" {
+	//	return profile
+	//}
+	return ""
 }
 
 func GetProperty() *ApplicationProperty {
@@ -291,10 +304,10 @@ func AppendYamlFile(filePath string) {
 	}
 
 	property, err := yaml.YamlToProperties(string(content))
-	valueMap, _ := yaml.PropertiesToMap(property)
-	for k, v := range valueMap {
-		SetValue(k, v)
+	if err != nil {
+		return
 	}
+	AppendValue(property)
 }
 
 func LoadPropertyFile(filePath string) {
@@ -343,10 +356,16 @@ func AppendPropertyFile(filePath string) {
 		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
-	valueMap, _ := yaml.PropertiesToMap(string(content))
-	for k, v := range valueMap {
-		SetValue(k, v)
+	valueMap, err := yaml.PropertiesToMap(string(content))
+	if err != nil {
+		return
 	}
+	propertiesValue, err := yaml.MapToProperties(valueMap)
+	if err != nil {
+		return
+	}
+
+	AppendValue(propertiesValue)
 }
 
 func LoadJsonFile(filePath string) {
@@ -397,63 +416,61 @@ func AppendJsonFile(filePath string) {
 	}
 
 	yamlStr, err := yaml.JsonToYaml(string(content))
+	if err != nil {
+		return
+	}
 	property, err := yaml.YamlToProperties(yamlStr)
-	valueMap, _ := yaml.PropertiesToMap(property)
-	for k, v := range valueMap {
-		SetValue(k, v)
+	if err != nil {
+		return
 	}
+
+	AppendValue(property)
 }
 
-func SetValue(key string, value interface{}) {
-	if appProperty == nil {
-		appProperty = &ApplicationProperty{}
-		appProperty.ValueMap = make(map[string]interface{})
-		appProperty.ValueDeepMap = make(map[string]interface{})
-	} else if appProperty.ValueMap == nil {
-		appProperty.ValueMap = make(map[string]interface{})
-	} else if appProperty.ValueDeepMap == nil {
-		appProperty.ValueDeepMap = make(map[string]interface{})
+func AppendValue(propertiesNewValue string) {
+	pMap, err := yaml.PropertiesToMap(propertiesNewValue)
+	for k, v := range pMap {
+		appProperty.ValueMap[k] = v
 	}
-	if oldValue, exist := appProperty.ValueMap[key]; exist {
-		if !util.IsBaseType(reflect.TypeOf(oldValue)) {
-			if reflect.TypeOf(oldValue) != reflect.TypeOf(value) {
-				return
-			}
-		}
+
+	propertiesValueOfOriginal, err := yaml.MapToProperties(appProperty.ValueMap)
+	if err != nil {
+		return
 	}
-	appProperty.ValueMap[key] = value
-	doPutValue(key, value)
+
+	resultYaml, err := yaml.PropertiesToYaml(propertiesValueOfOriginal)
+	if err != nil {
+		return
+	}
+	resultDeepMap, err := yaml.YamlToMap(resultYaml)
+	if err != nil {
+		return
+	}
+	appProperty.ValueDeepMap = resultDeepMap
 }
 
-func doPutValue(key string, value interface{}) {
-	if strings.Contains(key, ".") {
-		oldValue := GetValue(key)
-		if nil == oldValue && value != nil {
-			if appProperty.ValueDeepMap == nil {
-				appProperty.ValueDeepMap = make(map[string]interface{})
-			}
-			appProperty.ValueDeepMap[key] = value
-			return
-		}
-		if !util.IsBaseType(reflect.TypeOf(oldValue)) {
-			if reflect.TypeOf(oldValue).Kind() != reflect.TypeOf(value).Kind() {
-				return
-			}
-		}
-
-		lastIndex := strings.LastIndex(key, ".")
-		startKey := key[:lastIndex]
-		endKey := key[lastIndex+1:]
-
-		data := GetValue(startKey)
-		startValue := util.ToMap(data)
-		if nil != startValue {
-			startValue[endKey] = value
-		}
-
-		doPutValue(startKey, startValue)
+func SetValue(key, value string) {
+	propertiesNewValue := key + "=" + value
+	propertiesValueOfOriginal, err := yaml.MapToProperties(appProperty.ValueDeepMap)
+	if err != nil {
+		return
 	}
-	appProperty.ValueDeepMap[key] = value
+	propertiesValueOfOriginal += "\n" + propertiesNewValue
+	resultMap, err := yaml.PropertiesToMap(propertiesValueOfOriginal)
+	if err != nil {
+		return
+	}
+	appProperty.ValueMap = resultMap
+
+	resultYaml, err := yaml.PropertiesToYaml(propertiesValueOfOriginal)
+	if err != nil {
+		return
+	}
+	resultDeepMap, err := yaml.YamlToMap(resultYaml)
+	if err != nil {
+		return
+	}
+	appProperty.ValueDeepMap = resultDeepMap
 }
 
 func GetValueString(key string) string {

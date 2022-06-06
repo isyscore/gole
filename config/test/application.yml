@@ -1,0 +1,6 @@
+base:
+  redis:
+    enable: true
+    password: "ZljIsysc0re123"
+    standalone:
+      addr: "redis-service:26379"

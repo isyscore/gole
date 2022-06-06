@@ -29,7 +29,7 @@ func ToMap(data interface{}) map[string]interface{} {
 			mapKey := mapR.Key()
 			mapValue := mapR.Value()
 
-			resultMap[mapKey.String()] = mapValue
+			resultMap[ToString(mapKey.Interface())] = mapValue.Interface()
 		}
 		return resultMap
 	} else if reflect.TypeOf(data).Kind() == reflect.Struct {

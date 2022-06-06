@@ -10,15 +10,28 @@ import (
 	"path"
 	"reflect"
 	"strings"
+	"sync"
 )
 
 var appProperty *ApplicationProperty
+
+var appProperty *ApplicationProperty
+var configExist = false
+var loadLock sync.Mutex
+var configLoaded = false
 
 // LoadConfig 默认读取./resources/下面的配置文件
 // 支持yml、yaml、json、properties格式
 // 优先级yaml > yml > properties > json
 func LoadConfig() {
+	loadLock.Lock()
+	defer loadLock.Unlock()
+	if configLoaded {
+		return
+	}
+
 	LoadConfigFromRelativePath("")
+	configLoaded = true
 }
 
 // LoadConfigFromRelativePath 加载相对文件路径，相对路径是相对系统启动的位置部分

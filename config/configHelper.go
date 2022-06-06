@@ -172,7 +172,7 @@ func doLoadConfigFromAbsPath(resourceAbsPath string) {
 			SetValue("base.profiles.active", profile)
 			currentProfile := getProfileFromFileName(fileName)
 			if currentProfile == profile {
-				LoadFile(resourceAbsPath + fileName)
+				AppendFile(resourceAbsPath + fileName)
 			}
 		}
 	}
@@ -183,17 +183,28 @@ func LoadFile(filePath string) {
 	extend := getFileExtension(filePath)
 	extend = strings.ToLower(extend)
 	if extend == "yaml" {
-		configExist = true
 		LoadYamlFile(filePath)
 	} else if extend == "yml" {
-		configExist = true
 		LoadYamlFile(filePath)
 	} else if extend == "properties" {
-		configExist = true
 		LoadPropertyFile(filePath)
 	} else if extend == "json" {
-		configExist = true
 		LoadJsonFile(filePath)
+	}
+}
+
+// AppendFile 追加配置
+func AppendFile(filePath string) {
+	extend := getFileExtension(filePath)
+	extend = strings.ToLower(extend)
+	if extend == "yaml" {
+		AppendYamlFile(filePath)
+	} else if extend == "yml" {
+		AppendYamlFile(filePath)
+	} else if extend == "properties" {
+		AppendPropertyFile(filePath)
+	} else if extend == "json" {
+		AppendJsonFile(filePath)
 	}
 }
 

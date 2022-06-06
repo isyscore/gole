@@ -47,9 +47,6 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 		resourceAbsPath += "/"
 	}
 
-	// 读取cm文件
-	AppendConfigFromRelativePath("./config/application-default.yml")
-
 	files, err := ioutil.ReadDir(resourceAbsPath)
 	if err != nil {
 		fmt.Printf("read fail, resource: %v, err %v", resourceAbsPath, err.Error())
@@ -119,6 +116,9 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 			}
 		}
 	}
+
+	// 读取cm文件
+	AppendConfigFromRelativePath("./config/application-default.yml")
 }
 
 // AppendConfigFromRelativePath 追加配置：相对路径的配置文件

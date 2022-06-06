@@ -14,9 +14,6 @@ import (
 )
 
 var appProperty *ApplicationProperty
-
-var appProperty *ApplicationProperty
-var configExist = false
 var loadLock sync.Mutex
 var configLoaded = false
 

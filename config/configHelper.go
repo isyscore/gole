@@ -320,16 +320,19 @@ func SetValue(key string, value interface{}) {
 				return
 			}
 		}
-		appProperty.ValueMap[key] = value
 	}
-
+	appProperty.ValueMap[key] = value
 	doPutValue(key, value)
 }
 
 func doPutValue(key string, value interface{}) {
 	if strings.Contains(key, ".") {
 		oldValue := GetValue(key)
-		if nil == oldValue {
+		if nil == oldValue && value != nil {
+			if appProperty.ValueDeepMap == nil {
+				appProperty.ValueDeepMap = make(map[string]interface{})
+			}
+			appProperty.ValueDeepMap[key] = value
 			return
 		}
 		if !util.IsBaseType(reflect.TypeOf(oldValue)) {

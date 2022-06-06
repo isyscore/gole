@@ -130,6 +130,10 @@ func doLoadConfigFromAbsPath(resourceAbsPath string) {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
 		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
+		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
 	LoadYamlFile(resourceAbsPath + "application.yaml")
@@ -234,6 +238,10 @@ func LoadYamlFile(filePath string) {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
 		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
+		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
 	property, err := yaml.YamlToProperties(string(content))
@@ -254,6 +262,10 @@ func AppendYamlFile(filePath string) {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
 		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
+		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
 	property, err := yaml.YamlToProperties(string(content))
@@ -272,6 +284,10 @@ func LoadPropertyFile(filePath string) {
 	if appProperty == nil {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
+		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
 		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
@@ -293,6 +309,10 @@ func AppendPropertyFile(filePath string) {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
 		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
+		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
 	valueMap, _ := yaml.PropertiesToMap(string(content))
@@ -310,6 +330,10 @@ func LoadJsonFile(filePath string) {
 	if appProperty == nil {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
+		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
 		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
@@ -332,6 +356,10 @@ func AppendJsonFile(filePath string) {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
 		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
+		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 
 	yamlStr, err := yaml.JsonToYaml(string(content))
@@ -346,6 +374,10 @@ func SetValue(key string, value interface{}) {
 	if appProperty == nil {
 		appProperty = &ApplicationProperty{}
 		appProperty.ValueMap = make(map[string]interface{})
+		appProperty.ValueDeepMap = make(map[string]interface{})
+	} else if appProperty.ValueMap == nil {
+		appProperty.ValueMap = make(map[string]interface{})
+	} else if appProperty.ValueDeepMap == nil {
 		appProperty.ValueDeepMap = make(map[string]interface{})
 	}
 	if oldValue, exist := appProperty.ValueMap[key]; exist {

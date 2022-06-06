@@ -14,6 +14,7 @@ import (
 )
 
 var appProperty *ApplicationProperty
+var configExist = false
 var loadLock sync.Mutex
 var configLoaded = false
 
@@ -117,8 +118,17 @@ func LoadConfigWithAbsPath(resourceAbsPath string) {
 		}
 	}
 
+	doLoadConfigFromAbsPath(resourceAbsPath)
+
 	// 读取cm文件
 	AppendConfigFromRelativePath("./config/application-default.yml")
+
+	// 加载ApiModule
+	ApiModule = GetValueString("api-module")
+}
+
+func ExistConfigFile() bool {
+	return configExist
 }
 
 // AppendConfigFromRelativePath 追加配置：相对路径的配置文件
@@ -178,6 +188,89 @@ func AppendConfigWithAbsPath(fileName string) {
 			return
 		}
 	}
+}
+
+// 多种格式优先级：json > properties > yaml > yml
+func doLoadConfigFromAbsPath(resourceAbsPath string) {
+	if !strings.HasSuffix(resourceAbsPath, "/") {
+		resourceAbsPath += "/"
+	}
+	files, err := ioutil.ReadDir(resourceAbsPath)
+	if err != nil {
+		return
+	}
+
+	if appProperty == nil {
+		appProperty = &ApplicationProperty{}
+	}
+
+	LoadYamlFile(resourceAbsPath + "application.yaml")
+	LoadYamlFile(resourceAbsPath + "application.yml")
+	LoadPropertyFile(resourceAbsPath + "application.properties")
+	LoadJsonFile(resourceAbsPath + "application.json")
+
+	for _, fileInfo := range files {
+		if fileInfo.IsDir() {
+			continue
+		}
+
+		fileName := fileInfo.Name()
+		if !strings.HasPrefix(fileName, "application") {
+			continue
+		}
+
+		// 默认配置
+		if fileName == "application.yaml" {
+			configExist = true
+			break
+		} else if fileName == "application.yml" {
+			configExist = true
+			break
+		} else if fileName == "application.properties" {
+			configExist = true
+			break
+		} else if fileName == "application.json" {
+			configExist = true
+			break
+		}
+
+		profile := getActiveProfile()
+		if profile != "" {
+			SetValue("base.profiles.active", profile)
+			currentProfile := getProfileFromFileName(fileName)
+			if currentProfile == profile {
+				LoadFile(resourceAbsPath + fileName)
+			}
+		}
+	}
+}
+
+// LoadFile 加载某个
+func LoadFile(filePath string) {
+	extend := getFileExtension(filePath)
+	extend = strings.ToLower(extend)
+	if extend == "yaml" {
+		configExist = true
+		LoadYamlFile(filePath)
+	} else if extend == "yml" {
+		configExist = true
+		LoadYamlFile(filePath)
+	} else if extend == "properties" {
+		configExist = true
+		LoadPropertyFile(filePath)
+	} else if extend == "json" {
+		configExist = true
+		LoadJsonFile(filePath)
+	}
+}
+
+// 临时写死
+// 优先级：环境变量 > 本地配置
+func getActiveProfile() string {
+	var profile string
+	flag.StringVar(&profile, "gole.profile", "", "环境变量")
+	flag.Parse()
+	return profile
 }
 
 func GetProperty() *ApplicationProperty {

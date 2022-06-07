@@ -123,16 +123,16 @@ func TestReadLocal78(t *testing.T) {
 	config.ClearConfig()
 }
 
-func TestReadAppend1(t *testing.T) {
-	os.Setenv("gole.profile", "local78")
-
-	config.LoadConfig()
-	// 读取cm文件
-	config.AppendConfigFromRelativePath("./config/application-default.yml")
-	if config.ExistConfigFile() && config.GetValueBoolDefault("base.redis.enable", false) {
-		err := config.GetValueObject("base.redis", &config.RedisCfg)
-		if err != nil {
-			return
-		}
-	}
-}
+//func TestReadAppend1(t *testing.T) {
+//	os.Setenv("gole.profile", "local78")
+//
+//	config.LoadConfig()
+//	// 读取cm文件
+//	config.AppendConfigFromRelativePath("./config/application-default.yml")
+//	if config.ExistConfigFile() && config.GetValueBoolDefault("base.redis.enable", false) {
+//		err := config.GetValueObject("base.redis", &config.RedisCfg)
+//		if err != nil {
+//			return
+//		}
+//	}
+//}

@@ -47,6 +47,8 @@ func LoadConfigFromRelativePath(resourceAbsPath string) {
 func LoadConfigWithAbsPath(resourceAbsPath string) {
 	doLoadConfigFromAbsPath(resourceAbsPath)
 
+	AppendConfigFromRelativePath("./config/application-default.yml")
+
 	// 加载ApiModule
 	ApiModule = GetValueString("api-module")
 }

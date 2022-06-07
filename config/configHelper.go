@@ -1,6 +1,7 @@
 package config
 
 import (
+	"flag"
 	"fmt"
 	"github.com/isyscore/gole/util"
 	"github.com/isyscore/gole/yaml"
@@ -213,25 +214,25 @@ func ClearConfig() {
 // 临时写死
 // 优先级：环境变量 > 本地配置
 func getActiveProfile() string {
-	//if configProfile != "" {
-	//	return configProfile
-	//}
-	//var profile string
-	//flag.StringVar(&profile, "gole.profile", "", "环境变量")
-	//flag.Parse()
-	//configProfile = profile
-	//return profile
-
-	profile := os.Getenv("gole.profile")
-	if profile != "" {
-		return profile
+	if configProfile != "" {
+		return configProfile
 	}
+	var profile string
+	flag.StringVar(&profile, "gole.profile", "", "环境变量")
+	flag.Parse()
+	configProfile = profile
+	return profile
 
-	//profile = GetValueString("base.profiles.active")
+	//profile := os.Getenv("gole.profile")
 	//if profile != "" {
 	//	return profile
 	//}
-	return ""
+	//
+	////profile = GetValueString("base.profiles.active")
+	////if profile != "" {
+	////	return profile
+	////}
+	//return ""
 }
 
 func GetProperty() *ApplicationProperty {

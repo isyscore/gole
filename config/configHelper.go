@@ -453,23 +453,26 @@ func AppendValue(propertiesNewValue string) {
 }
 
 func SetValue(key, value string) {
-	propertiesNewValue := key + "=" + value
 	propertiesValueOfOriginal, err := yaml.MapToProperties(appProperty.ValueDeepMap)
 	if err != nil {
 		return
 	}
-	propertiesValueOfOriginal += "\n" + propertiesNewValue
 	resultMap, err := yaml.PropertiesToMap(propertiesValueOfOriginal)
 	if err != nil {
 		return
 	}
+	resultMap[key] = value
 	appProperty.ValueMap = resultMap
 
-	resultYaml, err := yaml.PropertiesToYaml(propertiesValueOfOriginal)
+	mapProperties, err := yaml.MapToProperties(resultMap)
 	if err != nil {
 		return
 	}
-	resultDeepMap, err := yaml.YamlToMap(resultYaml)
+	mapYaml, err := yaml.PropertiesToYaml(mapProperties)
+	if err != nil {
+		return
+	}
+	resultDeepMap, err := yaml.YamlToMap(mapYaml)
 	if err != nil {
 		return
 	}

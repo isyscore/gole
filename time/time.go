@@ -2,6 +2,7 @@ package time
 
 import (
 	"github.com/isyscore/gole/util"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -61,4 +62,8 @@ func ParseTimeYmsHmsSLoc(timeStr string, loc *time.Location) (time.Time, error) 
 
 func NumToTimeDuration(num int, duration time.Duration) time.Duration {
 	return time.Duration(util.ToInt64(num) * duration.Nanoseconds())
+}
+
+func TimeTest() {
+	logrus.Warn("test, ttt")
 }
